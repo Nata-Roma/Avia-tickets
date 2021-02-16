@@ -2,11 +2,18 @@ import TicketHeader from "./header/TicketHeader"
 import MoreButton from "./MoreButton"
 import Ticket from "./Ticket"
 
-const TicketContainer = () => {
+const TicketContainer = ({tickets, clicked, tabNames}) => {
+
     return (
         <div className='tickets-container'>
-            <TicketHeader />
-            <Ticket />
+            <TicketHeader
+                clicked={clicked}
+                tabNames={tabNames}
+            />
+            {tickets.map((ticket, i) => {
+                return <Ticket {...ticket} key={i} />
+            })}
+            
             <MoreButton />
         </div>
     )

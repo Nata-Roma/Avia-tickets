@@ -1,13 +1,11 @@
-import { useState } from "react";
 
-const FilterChoice = ({name, label}) => {
+const FilterChoice = ({name, label, clicked, choice}) => {
 
-    const [isChecked, setChecked] = useState(false);
 
     return (
         <div className='filter-choice'>
-            <input type='checkbox' name={name} checked={isChecked}  className='filter-choice__input' onChange={() => setChecked(!isChecked)} />
-            <label className='filter-choice__label' onClick={() => setChecked(!isChecked)} >{label}</label>
+            <input type='checkbox' name={name} checked={clicked}  className='filter-choice__input' onChange={() => choice (name)} />
+            <label className='filter-choice__label' onClick={() => choice(name)} >{label}</label>
         </div>
     )
 };

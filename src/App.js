@@ -128,9 +128,9 @@ function App() {
   const [idSearch, setIdSearch] = useState('');
   const [tabs, setTabs] = useState([...tabNames]);
   const [filters, setFilters] = useState([...filterChoice]);
-  const [tickets1, setTickets1] = useState({});
+  const [serverResponse, setServerResponse] = useState(false);
 
-
+  const [workTickets, setWorkTickets] = useState(fullBase);
 
   const handleTabClicked = (tabName) => {
     const state = [...tabs];
@@ -156,35 +156,37 @@ function App() {
     setFilters([...state]);
   };
 
-  const getTicketsById = (id) => {
-    fetch(`https://front-test.beta.aviasales.ru/tickets?searchId=${id}`)
+  const getTicketsById = async (idSearch) => {
+    console.log(idSearch);
+    await fetch(`https://front-test.beta.aviasales.ru/tickets?searchId=${idSearch}`)
       .then((response) => response.json())
-      .then((data) => setTickets(data.tickets))
+      .then( (data) => {
+        console.log(data.stop);
+        setServerResponse(data.stop);
+          setFullBase(data.tickets);
+      })
       .catch((err) => console.error(err));
   };
 
-  // useEffect(() => {
-  //   fetch('https://front-test.beta.aviasales.ru/search')
-  //   .then((response) => response.json())
-  //   .then((data) => {
-  //     setIdSearch(data.searchId);
-  //     getTicketsById(idSearch);
+  useEffect(() => {
+    fetch('https://front-test.beta.aviasales.ru/search')
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data.searchId);
+      setIdSearch(data.searchId);
+      getTicketsById(data.searchId);
+    })
 
-  //   })
-
-  // }, []);
-
-  // useEffect(() => {
-  //   
-  //   })
-  // }, [idSearch]);
+  }, []);
 
   useEffect((() => {
-    setTickets([...fullBase])
-  }), []);
+    setTickets([...fullBase]);
+    setWorkTickets([...tickets]);
+  }), [fullBase]);
+
 
   useEffect(() => {
-    setTickets([...fullBase]);
+    // setTickets([...fullBase]);
     const activeTab = tabs.filter((tab) => tab.isClicked);
     console.log(activeTab);
 
@@ -238,17 +240,15 @@ function App() {
     };
   };
 
-  
   useEffect(() => {
-    setTickets([...fullBase]);
+    setWorkTickets([...tickets]);
     let chipArr = [...tickets];
     const activeFilters = filters.filter((filter) => filter.isClicked);
     const tags = activeFilters.map((filter) => filter.name);
     console.log(activeFilters);
     console.log(tags[0]);
     chipArr = [...filterSwitch(tags[0])];
-    console.log(chipArr);
-    setTickets(chipArr);
+    setWorkTickets(chipArr);
   }, [filters]);
 
   return (
@@ -256,15 +256,16 @@ function App() {
       <Logo />
       <div className='main'>
         <Filter filterChoice={filterChoice} choice={handleFilterClicked} />
-        {tickets.length > 0 && (
+        {/* {tickets.length > 0 && ( */}
           <TicketContainer
-          tickets={tickets.slice(0, 5)}
+          tickets={filters[0].isClicked ? tickets.slice(0, 5) : workTickets.slice(0, 5)}
           tabNames={tabs}
           clicked={handleTabClicked}
         />
-        )}
+        {/* )} */}
         
       </div>
+      <p>{serverResponse}</p>
 
     </div>
   );

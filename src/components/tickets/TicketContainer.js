@@ -2,7 +2,7 @@ import TicketHeader from "./header/TicketHeader"
 import MoreButton from "./MoreButton"
 import Ticket from "./Ticket"
 
-const TicketContainer = ({tickets, clicked, tabNames}) => {
+const TicketContainer = ({tickets, clicked, tabNames, button, style}) => {
 
     return (
         <div className='tickets-container'>
@@ -14,7 +14,7 @@ const TicketContainer = ({tickets, clicked, tabNames}) => {
                 return <Ticket {...ticket} key={i} />
             })}
             
-            <MoreButton />
+            <MoreButton button={button} />
         </div>
     )
     

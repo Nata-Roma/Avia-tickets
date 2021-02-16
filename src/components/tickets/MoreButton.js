@@ -1,6 +1,6 @@
-const MoreButton = () => {
+const MoreButton = ({button}) => {
     return (
-        <div className='button'>
+        <div className='button' onClick={button}>
             Button
         </div>
     )

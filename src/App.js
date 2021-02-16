@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './App.css';
 import Filter from './components/filter/Filter';
 import Logo from './components/Logo';
+import Modal from './components/tickets/Modal';
 import TicketContainer from './components/tickets/TicketContainer';
 
 const ticketArr =
@@ -131,6 +132,7 @@ function App() {
   const [serverResponse, setServerResponse] = useState(false);
 
   const [workTickets, setWorkTickets] = useState(fullBase);
+  const [moreButton, setMoreButton] = useState(false);
 
   const handleTabClicked = (tabName) => {
     const state = [...tabs];
@@ -156,8 +158,15 @@ function App() {
     setFilters([...state]);
   };
 
+  const moreButtonClick = () => {
+    setMoreButton(true);
+      setTimeout(() => {
+        setMoreButton(false);
+        console.log(moreButton);
+      }, 3000);
+  };
+
   const getTicketsById = async (idSearch) => {
-    console.log(idSearch);
     await fetch(`https://front-test.beta.aviasales.ru/tickets?searchId=${idSearch}`)
       .then((response) => response.json())
       .then( (data) => {
@@ -172,7 +181,6 @@ function App() {
     fetch('https://front-test.beta.aviasales.ru/search')
     .then((response) => response.json())
     .then((data) => {
-      console.log(data.searchId);
       setIdSearch(data.searchId);
       getTicketsById(data.searchId);
     })
@@ -186,23 +194,32 @@ function App() {
 
 
   useEffect(() => {
-    // setTickets([...fullBase]);
     const activeTab = tabs.filter((tab) => tab.isClicked);
-    console.log(activeTab);
+    let chipArr = [];
+    const check = filters[0].isClicked;
+    if(check) {
+      chipArr = [...tickets];
+    } else {
+      chipArr = [...workTickets];
+    }
 
     if (activeTab.length > 0 && activeTab[0].name === 'САМЫЙ ДЕШЕВЫЙ') {
-      console.log('Chip');
-      let chipArr = [...tickets];
       chipArr = chipArr.sort((a, b) => a.price - b.price);
-      setTickets([...chipArr]);
+      if(check) {
+        setTickets([...chipArr]);
+      } else {
+        setWorkTickets([...chipArr]);
+      }
+      
     }
 
     if (activeTab.length > 0 && activeTab[0].name === 'САМЫЙ БЫСТРЫЙ') {
-      console.log('Fast');
-
-      let chipArr = [...tickets];
       chipArr = chipArr.sort((a, b) => (a.segments[0].duration + a.segments[1].duration) - (b.segments[0].duration + b.segments[1].duration));
-      setTickets([...chipArr]);
+      if(check) {
+        setTickets([...chipArr]);
+      } else {
+        setWorkTickets([...chipArr]);
+      }
     }
 
   }, [tabs]);
@@ -245,28 +262,27 @@ function App() {
     let chipArr = [...tickets];
     const activeFilters = filters.filter((filter) => filter.isClicked);
     const tags = activeFilters.map((filter) => filter.name);
-    console.log(activeFilters);
-    console.log(tags[0]);
     chipArr = [...filterSwitch(tags[0])];
     setWorkTickets(chipArr);
   }, [filters]);
 
+ 
   return (
+    <div className='main-div'>
     <div className='app'>
       <Logo />
       <div className='main'>
         <Filter filterChoice={filterChoice} choice={handleFilterClicked} />
-        {/* {tickets.length > 0 && ( */}
           <TicketContainer
           tickets={filters[0].isClicked ? tickets.slice(0, 5) : workTickets.slice(0, 5)}
           tabNames={tabs}
           clicked={handleTabClicked}
+          button={moreButtonClick}
         />
-        {/* )} */}
         
       </div>
-      <p>{serverResponse}</p>
-
+      </div>
+      {moreButton && <Modal />}
     </div>
   );
 }

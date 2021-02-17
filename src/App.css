@@ -122,6 +122,15 @@ html {
   color: #2196F3
 }
 
+.ticket__header-company {
+  width: 40%;
+}
+.ticket__header-company img {
+  width: 85%;
+  display: block;
+  margin: 0 0 0 auto;
+}
+
 .ticket__params {
   display: flex;
   justify-content: space-between;

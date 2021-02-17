@@ -2,38 +2,9 @@ import { useState } from "react";
 import HeaderTab from "./HeaderTab";
 
 const TicketHeader = ({tabNames, clicked}) => {
-    // const tabNames = [
-    //     {
-    //         name: 'САМЫЙ ДЕШЕВЫЙ',
-    //         isClicked: true,
-    //     },
-    //     {
-    //         name: 'САМЫЙ БЫСТРЫЙ',
-    //         isClicked: false,
-    //     },
-    //     {
-    //         name: 'ОПТИМАЛЬНЫЙ',
-    //         isClicked: false,
-    //     },
-    // ];
-
-    // const [tabs, setTabs] = useState([...tabNames]);
     
-
-    // const handleTabClicked = (tabName) => {
-    //     const state = [...tabs];
-    //     state.map((item) => {
-    //         if(item.name === tabName) {
-    //             item.isClicked = true;
-    //         } else {
-    //             item.isClicked = false;
-    //         }
-    //     });
-    //     setTabs([...state]);
-    // };
-
     return (
-        <div className='header'>
+        <div className='header' data-testid='data-header'>
             {tabNames.map((tab) => {
                 return (
                     <HeaderTab 

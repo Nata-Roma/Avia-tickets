@@ -23,12 +23,24 @@ const TicketSegment = (segment) => {
         }
         return timeOutput;
     }
-    
+
+    const dateFormat = (date, duration) => {
+        const begin = new Date(date);
+        const ms = begin.getTime()+duration*60*1000;
+        const end = new Date(ms);
+        const hoursB = begin.getUTCHours();
+        const minutesB = begin.getUTCMinutes();
+        const hoursE = end.getUTCHours();
+        const minutesE = end.getUTCMinutes();
+        const dateOut = `${hoursB}:${minutesB} - ${hoursE}:${minutesE}`;
+        return dateOut;
+    };
+    dateFormat(date, duration)
     return (
         <div className='ticket__params'>
                 <div className='ticket__params-block'>
                     <span className='params-header'>{origin} - {destination}</span>
-                    <span className='params-value'>{date}</span>
+                    <span className='params-value'>{dateFormat(date, duration)}</span>
                 </div>
                 <div className='ticket__params-block'>
                     <span className='params-header'>В пути</span>

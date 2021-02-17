@@ -4,6 +4,7 @@ const HeaderTab = ({ tabName, isClicked, clicked }) => {
             className=
             {isClicked ? 'header__tab active-tab' : 'header__tab'}
             onClick={() => clicked(tabName)}
+            data-testid='data-tab'
         >
             {tabName}
         </div>

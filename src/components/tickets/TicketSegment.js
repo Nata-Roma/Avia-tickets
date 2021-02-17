@@ -25,6 +25,11 @@ const TicketSegment = (segment) => {
     }
 
     const dateFormat = (date, duration) => {
+
+        const outputFormat = (item) => {
+            return item > 10 ? item : `0${item}`
+        };
+
         const begin = new Date(date);
         const ms = begin.getTime()+duration*60*1000;
         const end = new Date(ms);
@@ -32,7 +37,7 @@ const TicketSegment = (segment) => {
         const minutesB = begin.getUTCMinutes();
         const hoursE = end.getUTCHours();
         const minutesE = end.getUTCMinutes();
-        const dateOut = `${hoursB}:${minutesB} - ${hoursE}:${minutesE}`;
+        const dateOut = `${outputFormat(hoursB)}:${outputFormat(minutesB)} - ${outputFormat(hoursE)}:${outputFormat(minutesE)}`;
         return dateOut;
     };
     dateFormat(date, duration)

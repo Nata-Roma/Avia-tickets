@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import Filter from './components/filter/Filter';
 import Logo from './components/Logo';
@@ -82,9 +82,6 @@ const ticketArr =
   ]
   ;
 
-// date: 2021-02-23T23:09:00.000Z
-// duration: 1249
-
 const tabNames = [
   {
     name: 'САМЫЙ ДЕШЕВЫЙ',
@@ -101,25 +98,30 @@ const tabNames = [
 ];
 
 const filterChoice = [
-  {   name: 'all',
-      label: 'Все',
-      isClicked: true, 
+  {
+    name: 'all',
+    label: 'Все',
+    isClicked: true,
   },
-  {   name: 'direct',
-      label: 'Без пересадок',
-      isClicked: false, 
+  {
+    name: 'direct',
+    label: 'Без пересадок',
+    isClicked: false,
   },
-  {   name: 'onePoint',
-      label: '1 пересадка',
-      isClicked: false, 
+  {
+    name: 'onePoint',
+    label: '1 пересадка',
+    isClicked: false,
   },
-  {   name: 'twoPoint',
-      label: '2 пересадки',
-      isClicked: false, 
+  {
+    name: 'twoPoint',
+    label: '2 пересадки',
+    isClicked: false,
   },
-  {   name: 'threePoint',
-      label: '3 пересадки', 
-      isClicked: false, 
+  {
+    name: 'threePoint',
+    label: '3 пересадки',
+    isClicked: false,
   },
 ];
 
@@ -152,39 +154,38 @@ function App() {
       if (item.name === filterName) {
         item.isClicked = true;
       } else {
-          item.isClicked = false;
-        }
+        item.isClicked = false;
+      }
     });
     setFilters([...state]);
   };
 
   const moreButtonClick = () => {
     setMoreButton(true);
-      setTimeout(() => {
-        setMoreButton(false);
-        console.log(moreButton);
-      }, 3000);
+    setTimeout(() => {
+      setMoreButton(false);
+      console.log(moreButton);
+    }, 3000);
   };
 
   const getTicketsById = async (idSearch) => {
     await fetch(`https://front-test.beta.aviasales.ru/tickets?searchId=${idSearch}`)
       .then((response) => response.json())
-      .then( (data) => {
+      .then((data) => {
         console.log(data.stop);
         setServerResponse(data.stop);
-          setFullBase(data.tickets);
+        setFullBase(data.tickets);
       })
       .catch((err) => console.error(err));
   };
 
   useEffect(() => {
     fetch('https://front-test.beta.aviasales.ru/search')
-    .then((response) => response.json())
-    .then((data) => {
-      setIdSearch(data.searchId);
-      getTicketsById(data.searchId);
-    })
-
+      .then((response) => response.json())
+      .then((data) => {
+        setIdSearch(data.searchId);
+        getTicketsById(data.searchId);
+      })
   }, []);
 
   useEffect((() => {
@@ -197,7 +198,7 @@ function App() {
     const activeTab = tabs.filter((tab) => tab.isClicked);
     let chipArr = [];
     const check = filters[0].isClicked;
-    if(check) {
+    if (check) {
       chipArr = [...tickets];
     } else {
       chipArr = [...workTickets];
@@ -205,17 +206,17 @@ function App() {
 
     if (activeTab.length > 0 && activeTab[0].name === 'САМЫЙ ДЕШЕВЫЙ') {
       chipArr = chipArr.sort((a, b) => a.price - b.price);
-      if(check) {
+      if (check) {
         setTickets([...chipArr]);
       } else {
         setWorkTickets([...chipArr]);
       }
-      
+
     }
 
     if (activeTab.length > 0 && activeTab[0].name === 'САМЫЙ БЫСТРЫЙ') {
       chipArr = chipArr.sort((a, b) => (a.segments[0].duration + a.segments[1].duration) - (b.segments[0].duration + b.segments[1].duration));
-      if(check) {
+      if (check) {
         setTickets([...chipArr]);
       } else {
         setWorkTickets([...chipArr]);
@@ -233,23 +234,23 @@ function App() {
         return chipArr;
       case 'onePoint':
         chipArr = chipArr.filter((item) => {
-            return item.segments[0].stops.length === 1 && item.segments[1].stops.length === 0 ||
-                    item.segments[0].stops.length === 0 && item.segments[1].stops.length === 1 
-          });
-          return chipArr;
+          return item.segments[0].stops.length === 1 && item.segments[1].stops.length === 0 ||
+            item.segments[0].stops.length === 0 && item.segments[1].stops.length === 1
+        });
+        return chipArr;
       case 'twoPoint':
         chipArr = chipArr.filter((item) => {
           return item.segments[0].stops.length === 2 && item.segments[1].stops.length === 0 ||
-                  item.segments[0].stops.length === 1 && item.segments[1].stops.length === 1 ||
-                  item.segments[0].stops.length === 0 && item.segments[1].stops.length === 2 
+            item.segments[0].stops.length === 1 && item.segments[1].stops.length === 1 ||
+            item.segments[0].stops.length === 0 && item.segments[1].stops.length === 2
         });
         return chipArr;
       case 'threePoint':
         chipArr = chipArr.filter((item) => {
-          return  item.segments[0].stops.length === 3 && item.segments[1].stops.length === 0 ||
-                  item.segments[0].stops.length === 2 && item.segments[1].stops.length === 1 ||
-                  item.segments[0].stops.length === 1 && item.segments[1].stops.length === 2 ||
-                  item.segments[0].stops.length === 0 && item.segments[1].stops.length === 3
+          return item.segments[0].stops.length === 3 && item.segments[1].stops.length === 0 ||
+            item.segments[0].stops.length === 2 && item.segments[1].stops.length === 1 ||
+            item.segments[0].stops.length === 1 && item.segments[1].stops.length === 2 ||
+            item.segments[0].stops.length === 0 && item.segments[1].stops.length === 3
         });
         return chipArr;
       default:
@@ -266,21 +267,21 @@ function App() {
     setWorkTickets(chipArr);
   }, [filters]);
 
- 
+
   return (
     <div className='main-div'>
-    <div className='app'>
-      <Logo />
-      <div className='main'>
-        <Filter filterChoice={filterChoice} choice={handleFilterClicked} />
+      <div className='app'>
+        <Logo />
+        <div className='main'>
+          <Filter filterChoice={filterChoice} choice={handleFilterClicked} />
           <TicketContainer
-          tickets={filters[0].isClicked ? tickets.slice(0, 5) : workTickets.slice(0, 5)}
-          tabNames={tabs}
-          clicked={handleTabClicked}
-          button={moreButtonClick}
-        />
-        
-      </div>
+            tickets={filters[0].isClicked ? tickets.slice(0, 5) : workTickets.slice(0, 5)}
+            tabNames={tabs}
+            clicked={handleTabClicked}
+            button={moreButtonClick}
+          />
+
+        </div>
       </div>
       {moreButton && <Modal />}
     </div>
